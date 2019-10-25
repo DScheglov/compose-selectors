@@ -1,0 +1,45 @@
+{
+    "env": {
+        "browser": true,
+        "node":true,
+        "es6": true,
+        "jest/globals": true
+    },
+    "parser": "babel-eslint",
+    "extends": [
+        "airbnb",
+        "plugin:react/recommended"
+    ],
+    "parserOptions": {
+        "ecmaFeatures": {
+        },
+        "ecmaVersion": 2018,
+        "sourceType": "module"
+    },
+    "plugins": ["babel", "react", "react-hooks", "jest"],
+    "rules": {
+        "import/no-extraneous-dependencies": 0,
+        "import/prefer-default-export": 0,
+        "no-underscore-dangle": "off",
+        "comma-dangle": "off",
+        "no-nested-ternary": "off",
+        "indent": ["error", 2, { "flatTernaryExpressions": true, "SwitchCase": 1 }],
+        "no-param-reassign": "off",
+        "operator-linebreak": ["error", "before", { "overrides": { "?": "ignore", ":": "ignore" } }],
+        "jest/no-disabled-tests": "warn",
+        "jest/no-focused-tests": "error",
+        "jest/no-identical-title": "error",
+        "jest/prefer-to-have-length": "warn",
+        "jest/valid-expect": "error",
+        "no-bitwise": "off",
+        "arrow-parens": ["error", "as-needed"],
+        "object-curly-newline": ["error", { "consistent": true, "minProperties": 7 }]
+    },
+    "settings": {
+        "propWrapperFunctions": [
+            "forbidExtraProps",
+            {"property": "freeze", "object": "Object"},
+            {"property": "myFavoriteWrapper"}
+        ]
+    }
+}

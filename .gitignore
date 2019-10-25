@@ -1,0 +1,9 @@
+node_modules/
+/public/
+assets.json
+coverage
+.idea
+icons-source
+package-lock.json
+.DS_Store
+.vscode
