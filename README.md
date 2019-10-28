@@ -25,7 +25,7 @@ const DEFAULT_BOOK = {
 export default selectorFactory(domain => {
   const booksLists = selector(domain, state => state.lists);
 
-  const booksLookup = selector(domain, state => state.ids);
+  const booksLookup = selector(domain, state => state.byId);
 
   const bookIdsList = selectorFactory(
     listId => selector(
