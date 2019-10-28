@@ -1,18 +1,18 @@
 import { call } from './utils';
-import { cacheAll } from './caching';
+import { cacheAll, cacheLast } from './caching';
+import { slice } from './list-fn';
 
-export const selector = (inputs, fn, decorator) => {
-  const decoratedFn = (
-    typeof decorator === 'function'
-      ? decorator(fn)
-      : fn
-  );
+export function selector() {
+  const inputs = slice(arguments);
+  const mainSelector = inputs.pop();
 
-  return function () {
-    return decoratedFn.apply(
+  return function() {
+    return mainSelector.apply(
       void 0, inputs.map(call(arguments))
     );
   }
 }
 
-export const factory = cacheAll;
+export const selectorFactory = cacheAll;
+
+export { cacheAll, cacheLast };

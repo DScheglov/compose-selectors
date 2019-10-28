@@ -1,9 +1,19 @@
 # COMPOSE-SELECTORS
 
-```js
-import { pipe, selector, factory, managed } from 'compose-selectors/src';
+**./books/reducers.js**
 
-export const bookDomain = managed(_ => _.books);
+```js
+import { manageable } from 'compose-selectors/src';
+const books = createReducer(...);
+
+export default { books };
+
+export const domain = manageable(state => state.books);
+```
+
+**./books/selectors.js**
+```js
+import { selector, selectorFactory } from 'compose-selectors/src';
 
 const DEFAULT_BOOK_LIST = [];
 const DEFAULT_BOOK = {
@@ -12,26 +22,66 @@ const DEFAULT_BOOK = {
   author: '',
 };
 
-const bookSelectors = domain => {
-  const bookLists = pipe(domain, state => state.lists);
+export default selectorFactory(domain => {
+  const booksLists = selector(domain, state => state.lists);
 
-  const booksLookup = pipe(domain, state => state.ids);
+  const booksLookup = selector(domain, state => state.ids);
 
-  const bookIdsList = factory(
-    listId => pipe(bookLists, lists => lists[listId] || DEFAULT_BOOK_LIST)
+  const bookIdsList = selectorFactory(
+    listId => selector(
+      booksLists,
+      lists => lists[listId] || DEFAULT_BOOK_LIST
+    )
   );
 
-  const bookList = factory(
+  const bookList = selectorFactory(
     listId => selector(
-      [bookIdsList(listId), booksLookup],
-      (ids, books) => ids.map(id => books[id] || DEFAULT_BOOK),
-      cacheLast,
+      bookIdsList(listId), booksLookup,
+      cacheLast(
+        (ids, books) => ids.map(id => books[id] || DEFAULT_BOOK)
+      )
     )
   );
 
   return { bookLists, booksLookup, bookIdsList, bookList };
-});
+}));
+```
 
-export default factory(bookSelectors);
+**./books/index.js**
+```js
+import reducers, { domain } from './reducers';
+import selectors from './selectors';
 
+export default { reducers, selectors, domain };
+```
+
+Usage:
+
+**./my-app/selectors.js**
+```js
+import Books from '../books';
+
+export const books = Books.domain.clone();
+export default Books.selectors(books);
+```
+
+**./my-app/BookList.js**
+```js
+import React from 'react';
+import { useSelector } from 'react-redux';
+import BookSelectors from './selectors';
+
+function BookList({ listId }) {
+  const books = useSelector(
+    BookSelectors.bookList(listId)
+  );
+
+  return (
+    <ul>
+      {books.map(
+        book => <BookListItem key={book.id} book={book}>
+      )}
+    </ul>
+  );
+}
 ```
